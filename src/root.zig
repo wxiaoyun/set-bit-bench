@@ -18,11 +18,11 @@ pub fn randomInt(comptime T: type, gpa: Allocator, size: usize) ![]T {
 
 pub fn countSetBitNaive(n: u64) u8 {
     var nset: u8 = 0;
+    var num = n;
 
-    inline for (0..64) |i| {
-        const b: u6 = @intCast(i);
-        const set = (n & (@as(u64, 1) << b)) >> b;
-        nset += @intCast(set);
+    inline for (0..64) |_| {
+        nset += @intCast(num & 1);
+        num >>= 1;
     }
 
     return nset;
@@ -48,11 +48,12 @@ pub fn lookupTableInit() void {
 
 pub fn countSetBitLookup(n: u64) u8 {
     var nset: u8 = 0;
+    var num = n;
 
-    inline for (0..8) |i| {
-        const b: u6 = 1;
-        const sub_int: u8 = @truncate(n >> (b * i * 8));
+    inline for (0..8) |_| {
+        const sub_int: u8 = @truncate(num);
         nset += lookup_table[sub_int];
+        num >>= 8;
     }
 
     return nset;
